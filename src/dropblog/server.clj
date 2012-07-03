@@ -1,5 +1,6 @@
 (ns dropblog.server
-  (:require [noir.server :as server]))
+  (:require [noir.server :as server]
+  					dropblog.post-processor))
 
 (server/load-views "src/dropblog/views/")
 

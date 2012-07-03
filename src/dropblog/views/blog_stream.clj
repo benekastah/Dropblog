@@ -12,9 +12,9 @@
 
 (defn get-blog-posts []
 	(let [posts-dir (File. settings/posts-directory-html)
-				files (take settings/posts-per-page (or (.list posts-dir) []))]
+				files (take settings/posts-per-page (.list posts-dir))]
 		(if (not (empty? files))
-			(conj [:ol] (map read-blog-post-list-item files)))))
+			(conj [:ol#blog-stream] (map read-blog-post-list-item files)))))
 
 (defpartial stream []
 	(html (get-blog-posts)))

@@ -1,6 +1,6 @@
-# dropblog
+# Dropblog
 
-A website written in noir. 
+A simple blog written in clojure and [noir](http://webnoir.org). Just drop a markdown file into your dropbox folder, and watch your post go live.
 
 ## Usage
 
@@ -14,4 +14,3 @@ lein run
 Copyright (C) 2011 FIXME
 
 Distributed under the Eclipse Public License, the same as Clojure.
-

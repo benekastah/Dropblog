@@ -6,7 +6,7 @@
 	(html5
 		[:head
 			[:title "dropblog"]
-			(include-css "/css/reset.css"
+			(include-css ;"/css/reset.css"
 									 "/css/c/main.css")
 
 			(include-js "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"

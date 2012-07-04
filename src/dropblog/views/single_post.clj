@@ -1,9 +1,61 @@
 (ns dropblog.views.single-post
-	(:require [dropblog.views [common :as common]])
-	(:use [noir.core :only [defpage]]
+	(:require [dropblog.views [common :as common]]
+						[dropblog.settings :as settings]
+						[clj-time.core :as clj-time]
+						[clj-time.format :as time-format]
+						[clojure.string :as string])
+	(:use [noir.core :only [defpage defpartial]]
 				[hiccup.core :only [html]]
-				[dropblog.views.blog-stream :only [read-blog-post]])
-	(:import java.io.File))
+				[dropblog.post.metadata :only [read-metadata]]
+				[clojure.java.io :only [file]]))
+
+(defpartial byline [data]
+	(let [author-info (data "author")
+				author-info (if (not (map? author-info)) {"name" author-info} author-info)
+				{:strs [name url email]} author-info
+				name (or name settings/default-author-name)
+				web-link (fn [url display] [:a {:href url} display])
+				email-link (fn [email display] [:a {:href (str "mailto:" email)} display])
+				el [:span.author " by "]]
+		(cond
+			(and url email)
+				(conj el name " " (web-link url "web") " | " (email-link email "email"))
+			url
+				(conj el (web-link url name))
+			email
+				(conj el (email-link email name))
+			:else
+				(conj el name))))
+
+(defpartial post-date [data]
+	(let [created (time-format/unparse
+									(time-format/formatters :date)
+									(data "created"))
+				modified (time-format/unparse
+									(time-format/formatters :date)
+									(data "modified"))
+				el [:span.date "Posted on " created]]
+		(if (not= created modified)
+			(conj el [:br] "Edited on " modified)
+			el)))
+
+(defpartial permalink [f]
+	(let [[y m d t] (string/split (.getName f) #"-" 4)
+				t (string/replace t #"\.html$" "")
+				href (str "/post/" y "/" m "/" d "/" t)]
+		[:a.permalink {:href href} "[permalink]"]))
+
+(defpartial blog-post [f]
+	(let [f (file f)
+				html (slurp f)
+				data (read-metadata f)
+				by (byline data)
+				date (post-date data)
+				plink (permalink f)]
+		[:div date by [:br] plink [:div html]]))
+
+(defn read-blog-post [file]
+	(blog-post (str settings/posts-directory-html file)))
 
 (defn get-post [year month day title]
 	(let [fname (str year "-" month "-" day "-" title ".html")]

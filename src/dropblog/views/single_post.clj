@@ -18,8 +18,8 @@
 				email-link (fn [email display] [:a {:href (str "mailto:" email)} display])
 				el [:span.author " by "]]
 		(cond
-			(and url email)
-				(conj el name " " (web-link url "web") " | " (email-link email "email"))
+			(and web email)
+				(conj el name " " (web-link web "web") " | " (email-link email "email"))
 			web
 				(conj el (web-link web name))
 			email

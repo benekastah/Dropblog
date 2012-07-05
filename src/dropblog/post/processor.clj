@@ -8,6 +8,8 @@
 				[clojure.java.io :only [file delete-file]]
 				[dropblog.post.metadata :only [add-metadata-to-post]]))
 
+(def -debugging false)
+
 (defn begins-with-date? [f]
 	(not= nil (re-find #"^\d{4}\-\d{2}\-\d{2}" f)))
 
@@ -31,8 +33,9 @@
 				new-file (-> f
 										 .getName
 										 (string/replace #"\.(md|markdown)$" ".html")
-										 prepend-dir)
-				new-file-contents (slurp new-file)]
+										 prepend-dir
+										 file)
+				new-file-contents (if (.exists new-file) (slurp new-file))]
 		(if (not= html new-file-contents)
 			(spit new-file html))))
 
@@ -72,7 +75,7 @@
 
 (def md-dir (file settings/posts-directory-markdown))
 (def html-dir (file settings/posts-directory-html))
-(defn process-posts 
+(defn process-posts
 	([] (process-posts {}))
 	([files]
 		(sleep)
@@ -82,9 +85,13 @@
 						new-files (get-file-array files current-files)]
 				(process-posts new-files))
 		(catch Exception e (do
-			(try (stacktrace/print-throwable e))
+			(if -debugging
+				(throw e)
+				(try (stacktrace/print-throwable e)))
 			(process-posts))))))
 
-;; Launch this process in another thread.
-(.start (Thread. process-posts))
-
+(if -debugging
+	;; Useful for getting a full stack trace
+	(process-posts)
+	;; Launch this process in another thread.
+	(.start (Thread. process-posts)))

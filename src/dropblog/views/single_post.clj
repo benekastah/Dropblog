@@ -28,6 +28,7 @@
 				(conj el name))))
 
 (defpartial post-date [data]
+	(prn (data "created"))
 	(let [created (time-format/unparse
 									(time-format/formatters :date)
 									(data "created"))

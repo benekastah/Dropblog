@@ -6,18 +6,20 @@
 						[clj-time.coerce :as time-coerce])
 	(:use [clojure.java.io :only [file]]))
 
-(defn read-metadata [f]
-	(let [f (file f)
-				md (string/replace (slurp f) #"\n+" "")
-				data (nth (re-find #"^<!--(.*)-->" md) 1)
-				data (json/parse-string data)
-				{:strs [created]} data
-				modified (.lastModified f)
-				data (merge data 
-										{"created" (time-format/parse
-																 (time-format/formatters :date-time)
-																 created)
-										 "modified" (time-coerce/from-long modified)})]
+(defn read-metadata [f & args]
+	(let [no-additions (some #{:no-additions} args)
+		  f (file f)
+		  md (string/replace (slurp f) #"\n+" "")
+		  data (nth (re-find #"^<!--(.*)-->" md) 1)
+		  data (json/parse-string data)
+		  {:strs [created]} data
+		  modified (if no-additions (.lastModified f))
+		  created (if created (time-format/parse
+								(time-format/formatters :date-time)
+								created))
+		  data (merge data 
+					  		(if modified {"modified" (time-coerce/from-long modified)})
+							(if created  {"created" created}))]
 		data))
 
 (defn write-metadata [data]

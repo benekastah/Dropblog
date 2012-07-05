@@ -12,7 +12,7 @@
 (defpartial byline [data]
 	(let [author-info (data "author")
 				author-info (if (not (map? author-info)) {"name" author-info} author-info)
-				{:strs [name url email]} author-info
+				{:strs [name web email]} author-info
 				name (or name settings/default-author-name)
 				web-link (fn [url display] [:a {:href url} display])
 				email-link (fn [email display] [:a {:href (str "mailto:" email)} display])
@@ -20,8 +20,8 @@
 		(cond
 			(and url email)
 				(conj el name " " (web-link url "web") " | " (email-link email "email"))
-			url
-				(conj el (web-link url name))
+			web
+				(conj el (web-link web name))
 			email
 				(conj el (email-link email name))
 			:else

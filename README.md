@@ -20,9 +20,33 @@ Once you see the post appear on the web page successfully, reopen the markdown f
 
 ```markdown
 <!--{
-	"created" : ""
+	"created" : "2012-07-05T22:55:02.653Z"
 }-->
 ```
+
+This is how Dropblog keeps track of exactly what order the posts go in. You can add author information here as well:
+
+```markdown
+<!--{
+	"created" : "2012-07-05T22:55:02.653Z",
+	"author" : "Paul Harper"
+}-->
+```
+
+You can get fancier than that:
+
+```markdown
+<!--{
+	"created" : "2012-07-05T22:55:02.653Z",
+	"author" : {
+		"name" : "Paul Harper",
+		"web" : "www.mysite.com",
+		"email" : "me@mail.com"
+	}
+}-->
+```
+
+Your byline will change depending on what you include.
 
 ## License
 

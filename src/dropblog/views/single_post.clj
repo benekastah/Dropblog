@@ -1,8 +1,7 @@
 (ns dropblog.views.single-post
 	(:require [dropblog.views [common :as common]]
 						[dropblog.settings :as settings]
-						[clj-time.core :as clj-time]
-						[clj-time.format :as time-format]
+						[dropblog.time :as dtime]
 						[clojure.string :as string])
 	(:use [noir.core :only [defpage defpartial]]
 				[hiccup.core :only [html]]
@@ -28,17 +27,9 @@
 				(conj el name))))
 
 (defpartial post-date [data]
-	(prn (data "created"))
-	(let [created (time-format/unparse
-									(time-format/formatters :date)
-									(data "created"))
-				modified (time-format/unparse
-									(time-format/formatters :date)
-									(data "modified"))
-				el [:span.date "Posted on " created]]
-		(if (not= created modified)
-			(conj el [:br] "Edited on " modified)
-			el)))
+	(let [created (dtime/pretty-print (data "created"))
+				el [:span.date created]]
+			el))
 
 (defpartial permalink [f]
 	(let [[y m d t] (string/split (.getName f) #"-" 4)

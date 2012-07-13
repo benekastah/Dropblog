@@ -1,9 +1,7 @@
 (ns dropblog.post.metadata
 	(:require [cheshire.core :as json]
 						[clojure.string :as string]
-						[clj-time.core :as clj-time]
-						[clj-time.format :as time-format]
-						[clj-time.coerce :as time-coerce])
+						[dropblog.time :as dtime])
 	(:use [clojure.java.io :only [file]]))
 
 (defn read-metadata [f & args]
@@ -14,12 +12,10 @@
 		  data (json/parse-string data)
 		  {:strs [created]} data
 		  modified (if no-additions (.lastModified f))
-		  created (if created (time-format/parse
-								(time-format/formatters :date-time)
-								created))
+		  created (if created (dtime/from-date-time-string created))
 		  data (merge data 
-					  		(if modified {"modified" (time-coerce/from-long modified)})
-							(if created  {"created" created}))]
+					  			(if modified {"modified" (dtime/from-long modified)})
+									(if created  {"created" created}))]
 		data))
 
 (defn write-metadata [data]

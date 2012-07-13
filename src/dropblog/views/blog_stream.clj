@@ -16,7 +16,7 @@
 
 (defn get-post-files [posts]
 	(let [-posts (take settings/posts-per-page (.listFiles posts))
-				-posts (sort #(compare (get-post-date %1) (get-post-date %2)) -posts)]
+				-posts (sort #(compare (get-post-date %2) (get-post-date %1)) -posts)]
 		-posts))
 
 (defn get-blog-posts []

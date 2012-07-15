@@ -4,7 +4,7 @@ A simple blog engine written in clojure and [noir](http://webnoir.org). Just dro
 
 ## Getting Started
 
-This is a library that currently is build specifically to work with [noir](http://webnoir.org/). To use it, simply add it as a dependency in your `project.clj` file:
+First add dropblog as a dependency in your `project.clj` file:
 
 ```clojure
 [benekastah/dropblog "0.1.0-SNAPSHOT"]

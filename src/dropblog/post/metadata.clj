@@ -1,24 +1,24 @@
 (ns dropblog.post.metadata
 	(:require [cheshire.core :as json]
 						[clojure.string :as string]
-						[dropblog.time :as dtime])
-	(:use [clojure.java.io :only [file]]))
+						[dropblog.time :as dtime]
+						[dropblog.post.io :as post-io]))
 
 (defn read-metadata [f & args]
 	(let [no-additions (some #{:no-additions} args)
-		  f (file f)
-		  md (string/replace (slurp f) #"\n+" "")
-		  data (nth (re-find #"^<!--(.*)-->" md) 1)
-		  data (json/parse-string data)
-		  {:strs [created]} data
-		  modified (if no-additions (.lastModified f))
-		  created (if created (dtime/from-date-time-string created))
-		  data (merge data 
-					  			(if modified {"modified" (dtime/from-long modified)})
-									(if created  {"created" created}))]
+		  	f (post-io/file f)
+		  	md (string/replace (post-io/slurp f) #"\n+" "")
+		  	data (nth (re-find #"^<!--(.*)-->" md) 1)
+		  	data (json/parse-string data)
+		  	{:strs [created]} data
+		  	modified (if no-additions (.lastModified f))
+		  	created (if created (dtime/from-date-time-string created))
+		  	data (merge data 
+					  		(if modified {"modified" (dtime/from-long modified)})
+								(if created  {"created" created}))]
 		data))
 
-(defn write-metadata [data]
+(defn stringify [data]
 	(str "<!--" (json/generate-string data {:pretty true}) "-->"))
 
 (defn prepend-metadata [post data]
@@ -32,11 +32,11 @@
 							-txt (concat [-line] (rest txt))
 							-txt (string/join "\n" -txt)
 							-txt (str "\n\n" (string/replace -txt #"^\n+" ""))]
-					(str (write-metadata data) -txt))
+					(str (stringify data) -txt))
 				(recur (rest txt) (inc i))))))
 
 (defn add-metadata-to-post [f data & args]
-	(let [contents (slurp f)
+	(let [contents (post-io/slurp f)
 				prev-data (read-metadata f)
 				as-default (some #{:as-default} args)
 				more-data (if as-default
@@ -44,4 +44,4 @@
 										(merge prev-data data))
 				contents (if (not= more-data prev-data) (prepend-metadata contents more-data))]
 		(if contents
-			(spit f contents))))
+			(post-io/spit f contents))))

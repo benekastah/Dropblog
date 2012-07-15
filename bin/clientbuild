@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-coffee -wo resources/public/js/c -c resources/coffee &
-sass --watch resources/sass:resources/public/css/c

@@ -56,7 +56,7 @@ Then run `lein run` in your terminal. Once the server starts, navigate to [local
 
 Once you see the post appear on the web page successfully, reopen the markdown file (make sure you open the renamed file, not the old one which may still be in your editor). You will see it added some json at the top of the file like this:
 
-```markdown
+```json
 <!--{
 	"created" : "2012-07-05T22:55:02.653Z"
 }-->
@@ -64,7 +64,7 @@ Once you see the post appear on the web page successfully, reopen the markdown f
 
 This is how Dropblog keeps track of exactly what order the posts go in. You can add author information here as well:
 
-```markdown
+```json
 <!--{
 	"created" : "2012-07-05T22:55:02.653Z",
 	"author" : "Paul Harper"
@@ -73,7 +73,7 @@ This is how Dropblog keeps track of exactly what order the posts go in. You can 
 
 You can get fancier than that:
 
-```markdown
+```json
 <!--{
 	"created" : "2012-07-05T22:55:02.653Z",
 	"author" : {

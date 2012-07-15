@@ -52,7 +52,7 @@ Then you just need to define a couple simple routes, one for the blog stream and
     (post/get-post year month day title)))
 ```
 
-Then run `lein run`. Once the server starts, navigate to [localhost:8080](http://localhost:8080). Go into `resources/posts` and create a markdown file there (make sure its extension is either `md` or `markdown`). Wait a few moments and refresh the page in your browser. You will know the server processed the file properly when you see it renamed to something like `2012-07-04-your-file-name.md`.
+Then run `lein run` in your terminal. Once the server starts, navigate to [localhost:8080](http://localhost:8080). Go into `resources/posts` and create a markdown file there (make sure its extension is either `md` or `markdown`). Wait a few moments and refresh the page in your browser. You will know the server processed the file properly when you see it renamed to something like `2012-07-04-your-file-name.md`.
 
 Once you see the post appear on the web page successfully, reopen the markdown file (make sure you open the renamed file, not the old one which may still be in your editor). You will see it added some json at the top of the file like this:
 

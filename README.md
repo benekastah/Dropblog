@@ -14,7 +14,7 @@ Then, create a directory under `resources/posts` (or, in order to make it work f
 
 To make this work, add a small bit of code to your `server.clj` file:
 
-```
+```clojure
 (ns myblog.server
   (:require [noir.server :as server]
             [dropblog.core :as dropblog]))

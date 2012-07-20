@@ -1,6 +1,5 @@
 (ns dropblog.views.post
-	(:require [dropblog.views [common :as common]]
-						[dropblog.settings :as settings]
+	(:require [dropblog.settings :as settings]
 						[dropblog.time :as dtime]
 						[clojure.string :as string]
 						[dropblog.post.io :as post-io])

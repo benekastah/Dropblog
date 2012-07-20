@@ -1,6 +1,7 @@
 (ns dropblog.post.io
  (:require [clojure.java.io :as io]
-           [dropblog.settings :as settings]))
+           [dropblog.settings :as settings])
+ (:refer-clojure :exclude [slurp spit]))
 
 (defn get-post-name [p]
  (if (string? p)

@@ -22,7 +22,7 @@
 	(let [posts-dir (file @settings/directory-html)
 				files (get-post-files posts-dir max-number)]
 		(if (not (empty? files))
-			(conj [:ol#blog-stream] (map read-blog-post-list-item files)))))
+			(conj [:ul#blog-stream] (map read-blog-post-list-item files)))))
 
 (defpartial stream [max-number]
 	(html (get-blog-posts max-number)))

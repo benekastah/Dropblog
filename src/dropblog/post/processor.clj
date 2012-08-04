@@ -58,8 +58,7 @@
 	(reduce merge
 		(for [f file-list]
 			(if-let [*file (get-markdown-file f)]
-			 	(let [_ (prn *file)
-			 	 			fname (.getName *file)
+			 	(let [fname (.getName *file)
 							file-old-mod-date (old-files fname)
 							file-mod-date (.lastModified *file)]
 					(if (or (not (contains? old-files fname)) (not= file-mod-date file-old-mod-date))
@@ -71,13 +70,9 @@
 (def files (atom {}))
 (defn process-posts-loop []
   (Thread/sleep @settings/post-processor-frequency)
-  (prn :process-posts-loop)
 	(swap! files get-file-array (.list md-dir))
   (recur))
 
-
 (defn process-posts [& args]
- 	;(.start (Thread. process-posts-loop))
- 	(process-posts-loop)
- 	)
+ 	(.start (Thread. process-posts-loop)))
 

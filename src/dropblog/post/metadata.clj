@@ -6,10 +6,11 @@
 
 (defn read-metadata [f & args]
 	(let [no-additions (some #{:no-additions} args)
+	 			_ (prn :read-metadata :f f)
 		  	f (post-io/file f)
 		  	md (string/replace (post-io/slurp f) #"\n+" "")
 		  	data (nth (re-find #"^<!--(.*)-->" md) 1)
-		  	data (json/parse-string data)
+		  	data (or (json/parse-string data) {})
 		  	{:strs [created]} data
 		  	modified (if no-additions (.lastModified f))
 		  	created (if created (dtime/from-date-time-string created))

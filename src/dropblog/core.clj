@@ -25,4 +25,5 @@
       (reset! settings/directory-html directory-html))
     (if default-author-name
       (reset! settings/default-author-name default-author-name)))
+  (println "Watching for new posts...")
   (process-posts))

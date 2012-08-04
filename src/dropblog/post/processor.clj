@@ -8,14 +8,18 @@
 				[clojure.java.io :only [file delete-file]]
 				[dropblog.post.metadata :only [add-metadata-to-post read-metadata]]))
 
+(defn is-markdown-file? [f]
+ 	(not= nil (re-find #"^[^\.].*\.(md|markdown)$" f)))
+
 (defn begins-with-date? [f]
 	(not= nil (re-find #"^\d{4}\-\d{2}\-\d{2}" f)))
 
 (defn prepend-date
   ([f]
     (let [metadata (read-metadata f)
-          created (metadata "created")]
-      (prepend-date (or created (dtime/now)))))
+          created (metadata "created")
+          t (or created (dtime/now))]
+      (prepend-date f t)))
   ([f date]
   	(let [formatted (dtime/to-year-month-day-string date)]
   		(str formatted "-" f))))
@@ -41,35 +45,39 @@
 
 (defn get-markdown-file [f]
 	(let [*file (post-io/file f)]
-		(if (begins-with-date? f)
-			*file
-			(let [file-contents (post-io/slurp *file)
-						date-name (prepend-date f)
-						new-fname (str @settings/directory-markdown date-name)]
-				(post-io/spit new-fname file-contents)
-				(delete-file *file)
-				(get-markdown-file date-name)))))
+	 	(if (is-markdown-file? f)
+			(if (begins-with-date? f)
+				*file
+				(let [file-contents (post-io/slurp *file)
+							date-name (prepend-date f)]
+					(post-io/spit date-name file-contents)
+					(delete-file *file)
+					(get-markdown-file date-name))))))
 
 (defn get-file-array [old-files file-list]
 	(reduce merge
 		(for [f file-list]
-			(let [*file (get-markdown-file f)
-						fname (.getName *file)
-						file-old-mod-date (old-files fname)
-						file-mod-date (.lastModified *file)]
-
-				(if (or (not (contains? old-files fname)) (not= file-mod-date file-old-mod-date))
-				 	(render-post *file))
-				{fname file-mod-date}))))
+			(if-let [*file (get-markdown-file f)]
+			 	(let [_ (prn *file)
+			 	 			fname (.getName *file)
+							file-old-mod-date (old-files fname)
+							file-mod-date (.lastModified *file)]
+					(if (or (not (contains? old-files fname)) (not= file-mod-date file-old-mod-date))
+					 	(render-post *file))
+					{fname file-mod-date})))))
 
 (def md-dir (file @settings/directory-markdown))
 (def html-dir (file @settings/directory-html))
 (def files (atom {}))
-(defn- process-posts-loop []
+(defn process-posts-loop []
   (Thread/sleep @settings/post-processor-frequency)
+  (prn :process-posts-loop)
 	(swap! files get-file-array (.list md-dir))
   (recur))
 
+
 (defn process-posts [& args]
- 	(.start (Thread. process-posts-loop)))
+ 	;(.start (Thread. process-posts-loop))
+ 	(process-posts-loop)
+ 	)
 

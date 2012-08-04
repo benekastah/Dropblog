@@ -35,7 +35,7 @@
 	(let [[y m d t] (string/split fname #"-" 4)
 				t (string/replace t #"\.html$" "")
 				href (str "/post/" y "/" m "/" d "/" t)]
-		[:a.permalink {:href href} "[permalink]"]))
+		[:a.permalink {:href href} "permalink"]))
 
 (defpartial blog-post [fname]
 	(let [html (post-io/slurp fname)
@@ -43,7 +43,7 @@
 				by (byline data)
 				date (post-date data)
 				plink (permalink fname)]
-		[:div [:div {:class "meta"} by date plink] [:div {:class "post-content"} html]]))
+		[:div [:div {:class "post-content"} html][:div {:class "meta"} by " / " date " / " plink]]))
 
 (defn read-blog-post [file]
 	(blog-post file))

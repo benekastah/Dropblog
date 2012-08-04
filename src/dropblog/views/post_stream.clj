@@ -7,7 +7,7 @@
 				[dropblog.views.post :only [blog-post]]))
 
 (defn read-blog-post-list-item [file]
-	[:li.post (blog-post (.getName file)) [:hr]])
+	[:li.post (blog-post (.getName file))])
 
 (defn get-post-date [f]
 	(let [data (read-metadata f)]

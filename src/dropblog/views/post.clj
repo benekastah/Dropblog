@@ -15,7 +15,7 @@
 				name (or name @settings/default-author-name)
 				web-link (fn [url display] [:a {:href url} display])
 				email-link (fn [email display] [:a {:href (str "mailto:" email)} display])
-				el [:span.author " by "]]
+				el [:span.author ]]
 		(cond
 			(and web email)
 				(conj el name " " (web-link web "web") " | " (email-link email "email"))
@@ -43,7 +43,7 @@
 				by (byline data)
 				date (post-date data)
 				plink (permalink fname)]
-		[:div date by [:br] plink [:div html]]))
+		[:div [:div {:class "meta"} by date plink] [:div {:class "post-content"} html]]))
 
 (defn read-blog-post [file]
 	(blog-post file))

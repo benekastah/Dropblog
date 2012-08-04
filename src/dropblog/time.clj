@@ -38,7 +38,7 @@
             mins-since-date (Math/round (float (/ diff min-in-ms)))]
         (if (< hrs-since-date 1)
           (if (< mins-since-date 1)
-            (str "< 1 minute ago")
+            (str "Less than a minute ago")
             (str mins-since-date " minute" (pluralize mins-since-date) " ago"))
           (str hrs-since-date " hour" (pluralize hrs-since-date) " ago")))
       (time-format/unparse pretty-date date))))

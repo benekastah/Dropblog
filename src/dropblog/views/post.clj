@@ -35,7 +35,7 @@
 	(let [[y m d t] (string/split fname #"-" 4)
 				t (string/replace t #"\.html$" "")
 				href (str "/post/" y "/" m "/" d "/" t)]
-		[:a.permalink {:href href} "permalink"]))
+		[:a.permalink {:href href} "Permalink"]))
 
 (defpartial blog-post [fname]
 	(let [html (post-io/slurp fname)
